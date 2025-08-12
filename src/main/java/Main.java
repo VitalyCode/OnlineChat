@@ -13,16 +13,22 @@ public class Main {
 
     private static final String FILE = "settings.txt";
 
-    private static final String LOG = "server.log";
+    public static final String LOG = "server.log";
 
     private static int port;
 
     private static final List<ClientHandler> clients = new ArrayList<>();
 
+    public static int getPort(){
+
+        return PORT;
+    }
 
     public static void main(String[] args) {
 
-        loadSettings();
+        File file = new File(FILE);
+
+        loadSettings(file.getAbsolutePath());
 
         try (ServerSocket serverSocket = new ServerSocket(port)) {
 
@@ -48,9 +54,9 @@ public class Main {
         }
     }
 
-    private static void loadSettings() {
+    public static void loadSettings(String fileGetAbsolutePath) {
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(FILE))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileGetAbsolutePath))) {
 
             String line;
 
@@ -79,7 +85,7 @@ public class Main {
     }
 
     // Вложенный класс для обработки каждого клиента в отдельном потоке
-    private static class ClientHandler implements Runnable {
+    public static class ClientHandler implements Runnable {
 
         private final Socket socket;
 
@@ -110,7 +116,7 @@ public class Main {
 
                 System.out.println("Пользователь " + username + " присоединился.");
 
-                logMessage("Пользователь " + username + " присоединился.");
+                logMessage("Пользователь " + username + " присоединился.",LOG);
 
                 String message;
 
@@ -125,14 +131,14 @@ public class Main {
 
                     System.out.println(formattedMessage);
 
-                    logMessage(formattedMessage);
+                    logMessage(formattedMessage,LOG);
 
                     broadcastMessage(formattedMessage);
                 }
 
                 System.out.println("Пользователь " + username + " отключился.");
 
-                logMessage("Пользователь " + username + " отключился.");
+                logMessage("Пользователь " + username + " отключился.",LOG);
             }
             catch (IOException e) {
 
@@ -154,7 +160,7 @@ public class Main {
         }
 
         // Отправка сообщения всем клиентам (кроме себя)
-        private void broadcastMessage(String message) {
+        public void broadcastMessage(String message) {
 
             for (ClientHandler client : clients) {
 
@@ -168,8 +174,9 @@ public class Main {
 
 
     // Логирование сообщений в файл
-    private static void logMessage(String message) {
-        try (FileWriter fileWriter = new FileWriter(LOG, true); // Append mode
+    public static void logMessage(String message,String log) {
+
+        try (FileWriter fileWriter = new FileWriter(log, true); // Append mode
 
              BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
