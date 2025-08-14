@@ -122,6 +122,10 @@ public class ServerStart extends Thread {
 
                 while ((message = reader.readLine()) != null) {
 
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+
+                    String timestamp = dateFormat.format(new Date());
+
                     if ("/exit".equals(message)) {
 
                         break; // Выход из цикла, если клиент отправил "/exit"
@@ -129,7 +133,7 @@ public class ServerStart extends Thread {
 
                     String formattedMessage = username + ": " + message;
 
-                    System.out.println(formattedMessage);
+                    System.out.println(timestamp+" "+formattedMessage);
 
                     logMessage(formattedMessage,LOG);
 
@@ -161,6 +165,10 @@ public class ServerStart extends Thread {
 
         // Отправка сообщения всем клиентам (кроме себя)
         public void broadcastMessage(String message) {
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+
+            String timestamp = dateFormat.format(new Date());
 
             for (ClientHandler client : clients) {
 

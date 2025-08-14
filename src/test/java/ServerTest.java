@@ -23,17 +23,17 @@ public class ServerTest {
             writer.write("port=25567\n");
         }
 
-        Main.loadSettings(tempFile.getAbsolutePath());
+        ServerStart.loadSettings(tempFile.getAbsolutePath());
 
-        assertEquals(25565, Main.getPort());
+        assertEquals(25565, ServerStart.getPort());
     }
 
     @Test
     void testLoadSettings_invalidFile() throws IOException {
 
-        Main.loadSettings("nonexistent_file.txt");
+        ServerStart.loadSettings("nonexistent_file.txt");
 
-        assertEquals(25565, Main.getPort());
+        assertEquals(25565, ServerStart.getPort());
     }
 
     @Test
@@ -48,8 +48,8 @@ public class ServerTest {
             writer.write("port=abc\n");
         }
 
-        Main.loadSettings(tempFile.getAbsolutePath());
-        assertEquals(25566, Main.getPort());
+        ServerStart.loadSettings(tempFile.getAbsolutePath());
+        assertEquals(25566, ServerStart.getPort());
     }
     @Test
     void testLogMessage() throws IOException {
@@ -60,7 +60,7 @@ public class ServerTest {
 
         String testMessage = "Test log message";
 
-        Main.logMessage(testMessage, tempLogFile.getAbsolutePath());
+        ServerStart.logMessage(testMessage, tempLogFile.getAbsolutePath());
 
         try (BufferedReader reader = new BufferedReader(new FileReader(tempLogFile))) {
 
@@ -85,9 +85,10 @@ public class ServerTest {
 
             Socket acceptedSocket = serverSocket.accept(); // Сервер принимает соединение
 
-            Main.ClientHandler clientHandler = new Main.ClientHandler(acceptedSocket);
+            ServerStart.ClientHandler clientHandler = new ServerStart.ClientHandler(acceptedSocket);
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+
             PrintWriter writer = new PrintWriter(clientSocket.getOutputStream(), true);
 
             Thread clientThread = new Thread(clientHandler);
